@@ -1,0 +1,608 @@
+<link href="https://fonts.cdnfonts.com/css/chalkduster" rel="stylesheet">
+<style>
+    @import url('https://fonts.cdnfonts.com/css/chalkduster');
+</style>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Ada-VE: Training-Free Consistent Video Editing Using Adaptive Motion Prior (WACV 2025)</title>
+        <style>
+            body {
+                margin: 0;
+                font-family: Arial, sans-serif;
+            }
+            header {
+                background: linear-gradient(135deg, #667eea, #764ba2);
+                color: white;
+                padding: 60px 0;
+                text-align: center;
+            }
+            header h1 {
+                font-size: 3em;
+                margin-bottom: 0.2em;
+            }
+            header p {
+                font-size: 1.5em;
+                margin-top: 0;
+            }
+            .links a {
+                color: #ffdf5d;
+                text-decoration: none;
+                margin: 0 15px;
+                font-size: 1.2em;
+            }
+            .links a:hover {
+                text-decoration: underline;
+            }
+            .emoticons {
+                margin-top: 20px;
+                font-size: 2em;
+            }
+        </style>
+    </head>
+    <body>
+    
+    <header>
+        <h1>Ada-VE: Training-Free Consistent Video Editing Using Adaptive Motion Prior (WACV 2025)</h1>
+        <p>Tanvir Mahmud, Mustafa Munir, Radu Marculescu, and Diana Marculescu</p>
+        <div class="links">
+            <a href="https://arxiv.org/abs/2406.04873">📄 ArXiv Paper</a>
+            <a href="https://github.com/YourUsername/Ada-VE">💻 Code Repository</a>
+        </div>
+    </header>
+  
+
+
+  <!------------------ BEGIN SECTION ------------------>
+  <p>&nbsp;</p>
+  
+  <div class="content" style="max-width: 800px; margin: 0 auto; padding: 0 15px; text-align: center;">
+    <h2>Highlights</h2>
+
+    <figure style="margin: 20px auto;">
+        <img src="assets/img1.png" alt="Ada-VE Overview" style="width: 100%; max-width: 800px; display: block; margin: 0 auto;">
+        <figcaption style="font-size: 0.9em; color: #555; margin-top: 10px; text-align: left;">
+            <strong>Figure 1:</strong> Ada-VE Overview: (i) Preprocessing includes DDIM inversion to extract noise and motion masks using optical flow. (ii) Reference frames are sampled, edited iteratively with motion-guided sparse self-attention, caching KVs. (iii) Cached KVs are used to edit intermediate frames for enhanced temporal consistency.
+        </figcaption>
+    </figure>
+
+    <figure style="margin: 20px auto;">
+        <img src="assets/img2.png" alt="Self-Attention Comparison" style="width: 100%; max-width: 800px; display: block; margin: 0 auto;">
+        <figcaption style="font-size: 0.9em; color: #555; margin-top: 10px; text-align: left;">
+            <strong>Figure 2:</strong> Self-Attention Comparison: (i) Basic Self-Attention independently applies Q, K, and V to each frame. (ii) Fully Extended Self-Attention combines all frames' K and V for cross-frame attention. (iii) Proposed Sparsely Extended Self-Attention selectively extends K and V for moving regions, guided by motion masks to enhance detail without increasing complexity.
+        </figcaption>
+    </figure>
+</div>
+  
+  <hr>
+
+  <div style="max-width: 800px; margin: 0 auto; padding: 0 15px;">
+    <h2 id="qualitative_comparison_container" style="text-align: left;">
+        <a name="image-results" id="image-results"></a>Comparisons to Existing Baselines
+    </h2>
+    <p style="text-align: left;">
+        Our method largely improves the visual quality while maintaining temporal consistency of videos. Since all videos are compressed, 
+        please use full-screen to view the original quality. We use shorter-duration video (16 frames) for the Text-to-video-zero baseline due to extensive memory requirements.
+    </p>
+    <ul style="text-align: left;">
+        <li>Ada-VE (Ours).</li> 
+        <li>ControlVideo (<a href="#ref-cv">[1]</a>).</li> 
+        <li>TokenFlow (<a href="#ref-tf">[2]</a>).</li> 
+        <li>Text-to-video-zero (<a href="#ref-txt2vid">[3]</a>).</li> 
+        <li>SDEdit (<a href="#ref-sde">[4]</a>).</li> 
+        <li>StreamV2V (<a href="#ref-stream">[5]</a>).</li> 
+        <li>MotionTransfer (<a href="#ref-motion">[6]</a>).</li> 
+    </ul>
+</div>
+    <!-- Our msthod manages to preserve the structure of the guidance image while fulfilling the target text. </p> -->
+
+    <hr>
+    <br>
+    <br>
+
+    <table  width="800" align="center">
+          <!-- <th>A</th>
+          <th>B</th>
+          <th>C</th> -->
+          <!-- <br/> -->
+          <!-- <tr> <td colspan="8"><br />
+            <p align="left"> Wild TI2I (Generated images) </p>
+            <hr>
+        </td> 
+            </tr> -->
+      <tr>
+        <tr>
+            <th style="font-family: Chalkduster">"A marble sculpture running"</th>
+            <th style="font-size: 16px">Ours</th>
+            <th style="font-size: 16px">TokenFlow (<a href="#ref-tf">[2]</a>)</th>
+        </tr>
+  
+  
+        <tr>
+            <th><a href="qual_videos/woman-running/marble_sculpture/input.mp4"> <a href="qual_videos/woman-running/marble_sculpture/input.mp4"> <video  width="350" src="qual_videos/woman-running/marble_sculpture/input.mp4" autoplay loop controls muted/> </a> </a></th>
+            <th><a href="qual_videos/woman-running/marble_sculpture/adave.mp4"> <a href="qual_videos/woman-running/marble_sculpture/adave.mp4"> <video  width="350" src="qual_videos/woman-running/marble_sculpture/adave.mp4" autoplay loop controls muted/> </a> </a></th>
+            <th><a href="qual_videos/woman-running/marble_sculpture/tokenflow.mp4"> <a href="qual_videos/woman-running/marble_sculpture/tokenflow.mp4"> <video  width="350" src="qual_videos/woman-running/marble_sculpture/tokenflow.mp4" autoplay loop controls muted/> </a> </a></th>
+          </tr>
+          <tr>
+            <th style="font-size: 16px">ControlVideo (<a href="#ref-CV">[1]</a>)</th>
+            <th style="font-size: 16px">SDEdit (<a href="#ref-SDE">[4]</a>)</th>
+            <th style="font-size: 16px">T2VZero (<a href="#ref-txt2vid">[3]</a>)</th>
+        </tr>
+          <tr>
+            <th><a href="qual_videos/woman-running/marble_sculpture/controlvideo.mp4"> <a href="qual_videos/woman-running/marble_sculpture/controlvideo.mp4"> <video  width="350" src="qual_videos/woman-running/marble_sculpture/controlvideo.mp4" autoplay loop controls muted/> </a> </a></th>
+            <th><a href="qual_videos/woman-running/marble_sculpture/sdedit.mp4"> <a href="qual_videos/woman-running/marble_sculpture/sdedit.mp4"> <video  width="350" src="qual_videos/woman-running/marble_sculpture/sdedit.mp4" autoplay loop controls muted/> </a> </a></th>
+            <th><a href="qual_videos/woman-running/marble_sculpture/t2v.mp4"> <a href="qual_videos/woman-running/marble_sculpture/t2v.mp4"> <video  width="350" src="qual_videos/woman-running/marble_sculpture/t2v.mp4" autoplay loop controls muted/> </a> </a></th>
+          </tr>
+          <tr>
+            <th style="font-size: 16px">StreamV2V (<a href="#ref-stream">[5]</a>)</th>
+            <th style="font-size: 16px">MotionTransfer (<a href="#ref-motion">[6]</a>)</th>
+        </tr>
+          <tr>
+            <th><a href="qual_videos/woman-running/marble_sculpture/stream.mp4"> <a href="qual_videos/woman-running/marble_sculpture/stream.mp4"> <video  width="350" src="qual_videos/woman-running/marble_sculpture/stream.mp4" autoplay loop controls muted/> </a> </a></th>
+            <th><a href="qual_videos/woman-running/marble_sculpture/motion.mp4"> <a href="qual_videos/woman-running/marble_sculpture/motion.mp4"> <video  width="350" src="qual_videos/woman-running/marble_sculpture/motion.mp4" autoplay loop controls muted/> </a> </a></th>
+          </tr>
+        </table>
+
+  <hr>
+    <br>
+    <br>
+
+    <table  width="800" align="center">
+          <!-- <th>A</th>
+          <th>B</th>
+          <th>C</th> -->
+          <!-- <br/> -->
+          <!-- <tr> <td colspan="8"><br />
+            <p align="left"> Wild TI2I (Generated images) </p>
+            <hr>
+        </td> 
+            </tr> -->
+      <tr>
+        <tr>
+            <th style="font-family: Chalkduster">"waterpainting of woman running"</th>
+            <th style="font-size: 16px">Ours</th>
+            <th style="font-size: 16px">TokenFlow (<a href="#ref-tf">[2]</a>)</th>
+        </tr>
+  
+  
+        <tr>
+            <th><a href="qual_videos/woman-running/waterpainting/input.mp4"> <a href="qual_videos/woman-running/waterpainting/input.mp4"> <video  width="350" src="qual_videos/woman-running/waterpainting/input.mp4" autoplay loop controls muted/> </a> </a></th>
+            <th><a href="qual_videos/woman-running/waterpainting/adave.mp4"> <a href="qual_videos/woman-running/waterpainting/adave.mp4"> <video  width="350" src="qual_videos/woman-running/waterpainting/adave.mp4" autoplay loop controls muted/> </a> </a></th>
+            <th><a href="qual_videos/woman-running/waterpainting/tokenflow.mp4"> <a href="qual_videos/woman-running/waterpainting/tokenflow.mp4"> <video  width="350" src="qual_videos/woman-running/waterpainting/tokenflow.mp4" autoplay loop controls muted/> </a> </a></th>
+          </tr>
+          <tr>
+            <th style="font-size: 16px">ControlVideo (<a href="#ref-CV">[1]</a>)</th>
+            <th style="font-size: 16px">SDEdit (<a href="#ref-SDE">[4]</a>)</th>
+            <th style="font-size: 16px">T2VZero (<a href="#ref-txt2vid">[3]</a>)</th>
+        </tr>
+          <tr>
+            <th><a href="qual_videos/woman-running/waterpainting/controlvideo.mp4"> <a href="qual_videos/woman-running/waterpainting/controlvideo.mp4"> <video  width="350" src="qual_videos/woman-running/waterpainting/controlvideo.mp4" autoplay loop controls muted/> </a> </a></th>
+            <th><a href="qual_videos/woman-running/waterpainting/sdedit.mp4"> <a href="qual_videos/woman-running/waterpainting/sdedit.mp4"> <video  width="350" src="qual_videos/woman-running/waterpainting/sdedit.mp4" autoplay loop controls muted/> </a> </a></th>
+            <th><a href="qual_videos/woman-running/waterpainting/t2v.mp4"> <a href="qual_videos/woman-running/waterpainting/t2v.mp4"> <video  width="350" src="qual_videos/woman-running/waterpainting/t2v.mp4" autoplay loop controls muted/> </a> </a></th>
+          </tr>
+
+          <tr>
+            <th style="font-size: 16px">StreamV2V (<a href="#ref-stream">[5]</a>)</th>
+            <th style="font-size: 16px">MotionTransfer (<a href="#ref-motion">[6]</a>)</th>
+        </tr>
+        <tr>
+          <th><a href="qual_videos/woman-running/waterpainting/stream.mp4"> <a href="qual_videos/woman-running/waterpainting/stream.mp4"> <video  width="350" src="qual_videos/woman-running/waterpainting/stream.mp4" autoplay loop controls muted/> </a> </a></th>
+          <th><a href="qual_videos/woman-running/waterpainting/motion.mp4"> <a href="qual_videos/woman-running/waterpainting/motion.mp4"> <video  width="350" src="qual_videos/woman-running/waterpainting/motion.mp4" autoplay loop controls muted/> </a> </a></th>
+        </tr>
+      </table>
+      <!-- first sample eds -->
+
+      <hr>
+      <br>
+      <br>
+  
+      <table  width="800" align="center">
+            <!-- <th>A</th>
+            <th>B</th>
+            <th>C</th> -->
+            <!-- <br/> -->
+            <!-- <tr> <td colspan="8"><br />
+              <p align="left"> Wild TI2I (Generated images) </p>
+              <hr>
+          </td> 
+              </tr> -->
+        <tr>
+          <tr>
+              <th style="font-family: Chalkduster">"Shiny silver robot doing moonwalk"</th>
+              <th style="font-size: 16px">Ours</th>
+              <th style="font-size: 16px">TokenFlow (<a href="#ref-tf">[2]</a>)</th>
+          </tr>
+    
+    
+          <tr>
+              <th><a href="qual_videos/moonwalk/shiny_silver_robot/input.mp4"> <a href="qual_videos/moonwalk/shiny_silver_robot/input.mp4"> <video  width="350" src="qual_videos/moonwalk/shiny_silver_robot/input.mp4" autoplay loop controls muted/> </a> </a></th>
+              <th><a href="qual_videos/moonwalk/shiny_silver_robot/adave.mp4"> <a href="qual_videos/moonwalk/shiny_silver_robot/adave.mp4"> <video  width="350" src="qual_videos/moonwalk/shiny_silver_robot/adave.mp4" autoplay loop controls muted/> </a> </a></th>
+              <th><a href="qual_videos/moonwalk/shiny_silver_robot/tokenflow.mp4"> <a href="qual_videos/moonwalk/shiny_silver_robot/tokenflow.mp4"> <video  width="350" src="qual_videos/moonwalk/shiny_silver_robot/tokenflow.mp4" autoplay loop controls muted/> </a> </a></th>
+            </tr>
+            <tr>
+              <th style="font-size: 16px">ControlVideo (<a href="#ref-CV">[1]</a>)</th>
+              <th style="font-size: 16px">SDEdit (<a href="#ref-SDE">[4]</a>)</th>
+              <th style="font-size: 16px">T2VZero (<a href="#ref-txt2vid">[3]</a>)</th>
+          </tr>
+            <tr>
+              <th><a href="qual_videos/moonwalk/shiny_silver_robot/controlvideo.mp4"> <a href="qual_videos/moonwalk/shiny_silver_robot/controlvideo.mp4"> <video  width="350" src="qual_videos/moonwalk/shiny_silver_robot/controlvideo.mp4" autoplay loop controls muted/> </a> </a></th>
+              <th><a href="qual_videos/moonwalk/shiny_silver_robot/sdedit.mp4"> <a href="qual_videos/moonwalk/shiny_silver_robot/sdedit.mp4"> <video  width="350" src="qual_videos/moonwalk/shiny_silver_robot/sdedit.mp4" autoplay loop controls muted/> </a> </a></th>
+              <th><a href="qual_videos/moonwalk/shiny_silver_robot/t2v.mp4"> <a href="qual_videos/moonwalk/shiny_silver_robot/t2v.mp4"> <video  width="350" src="qual_videos/moonwalk/shiny_silver_robot/t2v.mp4" autoplay loop controls muted/> </a> </a></th>
+            </tr>
+            <tr>
+              <th style="font-size: 16px">StreamV2V (<a href="#ref-stream">[5]</a>)</th>
+              <th style="font-size: 16px">MotionTransfer (<a href="#ref-motion">[6]</a>)</th>
+          </tr>
+          <tr>
+            <th><a href="qual_videos/moonwalk/shiny_silver_robot/stream.mp4"> <a href="qual_videos/moonwalk/shiny_silver_robot/stream.mp4"> <video  width="350" src="qual_videos/moonwalk/shiny_silver_robot/stream.mp4" autoplay loop controls muted/> </a> </a></th>
+            <th><a href="qual_videos/moonwalk/shiny_silver_robot/motion.mp4"> <a href="qual_videos/moonwalk/shiny_silver_robot/motion.mp4"> <video  width="350" src="qual_videos/moonwalk/shiny_silver_robot/motion.mp4" autoplay loop controls muted/> </a> </a></th>
+          </tr>
+
+        </table>
+ <!-- this sample ends -->
+
+ <hr>
+ <br>
+ <br>
+
+ <table  width="800" align="center">
+       <!-- <th>A</th>
+       <th>B</th>
+       <th>C</th> -->
+       <!-- <br/> -->
+       <!-- <tr> <td colspan="8"><br />
+         <p align="left"> Wild TI2I (Generated images) </p>
+         <hr>
+     </td> 
+         </tr> -->
+   <tr>
+     <tr>
+         <th style="font-family: Chalkduster">"Car running in winter days"</th>
+         <th style="font-size: 16px">Ours</th>
+         <th style="font-size: 16px">TokenFlow (<a href="#ref-tf">[2]</a>)</th>
+     </tr>
+
+
+     <tr>
+         <th><a href="qual_videos/car-turn/winter_days/input.mp4"> <a href="qual_videos/car-turn/winter_days/input.mp4"> <video  width="350" src="qual_videos/car-turn/winter_days/input.mp4" autoplay loop controls muted/> </a> </a></th>
+         <th><a href="qual_videos/car-turn/winter_days/adave.mp4"> <a href="qual_videos/car-turn/winter_days/adave.mp4"> <video  width="350" src="qual_videos/car-turn/winter_days/adave.mp4" autoplay loop controls muted/> </a> </a></th>
+         <th><a href="qual_videos/car-turn/winter_days/tokenflow.mp4"> <a href="qual_videos/car-turn/winter_days/tokenflow.mp4"> <video  width="350" src="qual_videos/car-turn/winter_days/tokenflow.mp4" autoplay loop controls muted/> </a> </a></th>
+       </tr>
+       <tr>
+         <th style="font-size: 16px">ControlVideo (<a href="#ref-CV">[1]</a>)</th>
+         <th style="font-size: 16px">SDEdit (<a href="#ref-SDE">[4]</a>)</th>
+         <th style="font-size: 16px">T2VZero (<a href="#ref-txt2vid">[3]</a>)</th>
+     </tr>
+       <tr>
+         <th><a href="qual_videos/car-turn/winter_days/controlvideo.mp4"> <a href="qual_videos/car-turn/winter_days/controlvideo.mp4"> <video  width="350" src="qual_videos/car-turn/winter_days/controlvideo.mp4" autoplay loop controls muted/> </a> </a></th>
+         <th><a href="qual_videos/car-turn/winter_days/sdedit.mp4"> <a href="qual_videos/car-turn/winter_days/sdedit.mp4"> <video  width="350" src="qual_videos/car-turn/winter_days/sdedit.mp4" autoplay loop controls muted/> </a> </a></th>
+         <th><a href="qual_videos/car-turn/winter_days/t2v.mp4"> <a href="qual_videos/car-turn/winter_days/t2v.mp4"> <video  width="350" src="qual_videos/car-turn/winter_days/t2v.mp4" autoplay loop controls muted/> </a> </a></th>
+       </tr>
+       <tr>
+        <th style="font-size: 16px">StreamV2V (<a href="#ref-stream">[5]</a>)</th>
+        <th style="font-size: 16px">MotionTransfer (<a href="#ref-motion">[6]</a>)</th>
+    </tr>
+    <tr>
+      <th><a href="qual_videos/car-turn/winter_days/stream.mp4"> <a href="qual_videos/car-turn/winter_days/stream.mp4"> <video  width="350" src="qual_videos/car-turn/winter_days/stream.mp4" autoplay loop controls muted/> </a> </a></th>
+      <th><a href="qual_videos/car-turn/winter_days/motion.mp4"> <a href="qual_videos/car-turn/winter_days/motion.mp4"> <video  width="350" src="qual_videos/car-turn/winter_days/motion.mp4" autoplay loop controls muted/> </a> </a></th>
+    </tr>
+
+      </table>
+
+<hr>
+<br>
+<br>
+<table  width="800" align="center">
+     <!-- <th>A</th>
+     <th>B</th>
+     <th>C</th> -->
+     <!-- <br/> -->
+     <!-- <tr> <td colspan="8"><br />
+       <p align="left"> Wild TI2I (Generated images) </p>
+       <hr>
+   </td> 
+       </tr> -->
+ <tr>
+   <tr>
+       <th style="font-family: Chalkduster">"Watercolor painting of car running"</th>
+       <th style="font-size: 16px">Ours</th>
+       <th style="font-size: 16px">TokenFlow (<a href="#ref-tf">[2]</a>)</th>
+       <!-- <th style="font-size: 16px">ControlVideo (<a href="#ref-CV">[1]</a>)</a>)</th> -->
+   </tr>
+
+
+   <tr>
+       <th><a href="qual_videos/car-turn/watercolor_painting/input.mp4"> <a href="qual_videos/car-turn/watercolor_painting/input.mp4"> <video  width="350" src="qual_videos/car-turn/watercolor_painting/input.mp4" autoplay loop controls muted/> </a> </a></th>
+       <th><a href="qual_videos/car-turn/watercolor_painting/adave.mp4"> <a href="qual_videos/car-turn/watercolor_painting/adave.mp4"> <video  width="350" src="qual_videos/car-turn/watercolor_painting/adave.mp4" autoplay loop controls muted/> </a> </a></th>
+       <th><a href="qual_videos/car-turn/watercolor_painting/tokenflow.mp4"> <a href="qual_videos/car-turn/watercolor_painting/tokenflow.mp4"> <video  width="350" src="qual_videos/car-turn/watercolor_painting/tokenflow.mp4" autoplay loop controls muted/> </a> </a></th>
+     </tr>
+     <tr>
+       <th style="font-size: 16px">ControlVideo (<a href="#ref-CV">[1]</a>)</th>
+       <th style="font-size: 16px">SDEdit (<a href="#ref-SDE">[4]</a>)</th>
+       <th style="font-size: 16px">T2VZero (<a href="#ref-txt2vid">[3]</a>)</th>
+   </tr>
+     <tr>
+       <th><a href="qual_videos/car-turn/watercolor_painting/controlvideo.mp4"> <a href="qual_videos/car-turn/watercolor_painting/controlvideo.mp4"> <video  width="350" src="qual_videos/car-turn/watercolor_painting/controlvideo.mp4" autoplay loop controls muted/> </a> </a></th>
+       <th><a href="qual_videos/car-turn/watercolor_painting/sdedit.mp4"> <a href="qual_videos/car-turn/watercolor_painting/sdedit.mp4"> <video  width="350" src="qual_videos/car-turn/watercolor_painting/sdedit.mp4" autoplay loop controls muted/> </a> </a></th>
+       <th><a href="qual_videos/car-turn/watercolor_painting/t2v.mp4"> <a href="qual_videos/car-turn/watercolor_painting/t2v.mp4"> <video  width="350" src="qual_videos/car-turn/watercolor_painting/t2v.mp4" autoplay loop controls muted/> </a> </a></th>
+     </tr>
+     <tr>
+      <th style="font-size: 16px">MotionTransfer (<a href="#ref-motion">[6]</a>)</th>
+  </tr>
+  <tr>
+    <th><a href="qual_videos/car-turn/watercolor_painting/motion.mp4"> <a href="qual_videos/car-turn/watercolor_painting/motion.mp4"> <video  width="350" src="qual_videos/car-turn/watercolor_painting/motion.mp4" autoplay loop controls muted/> </a> </a></th>
+  </tr>
+
+ </table>
+
+<hr>
+<br>
+<br>
+
+<table  width="800" align="center">
+      <!-- <th>A</th>
+      <th>B</th>
+      <th>C</th> -->
+      <!-- <br/> -->
+      <!-- <tr> <td colspan="8"><br />
+        <p align="left"> Wild TI2I (Generated images) </p>
+        <hr>
+    </td> 
+        </tr> -->
+  <tr>
+    <tr>
+        <th style="font-family: Chalkduster">"Shiny silver robotic wolf"</th>
+        <th style="font-size: 16px">Ours</th>
+        <th style="font-size: 16px">TokenFlow (<a href="#ref-tf">[2]</a>)</th>
+    </tr>
+
+
+    <tr>
+        <th><a href="qual_videos/wolf/shiny_robot/input.mp4"> <a href="qual_videos/wolf/shiny_robot/input.mp4"> <video  width="350" src="qual_videos/wolf/shiny_robot/input.mp4" autoplay loop controls muted/> </a> </a></th>
+        <th><a href="qual_videos/wolf/shiny_robot/adave.mp4"> <a href="qual_videos/wolf/shiny_robot/adave.mp4"> <video  width="350" src="qual_videos/wolf/shiny_robot/adave.mp4" autoplay loop controls muted/> </a> </a></th>
+        <th><a href="qual_videos/wolf/shiny_robot/tokenflow.mp4"> <a href="qual_videos/wolf/shiny_robot/tokenflow.mp4"> <video  width="350" src="qual_videos/wolf/shiny_robot/tokenflow.mp4" autoplay loop controls muted/> </a> </a></th>
+      </tr>
+      <tr>
+        <th style="font-size: 16px">ControlVideo (<a href="#ref-CV">[1]</a>)</th>
+        <th style="font-size: 16px">SDEdit (<a href="#ref-SDE">[4]</a>)</th>
+        <th style="font-size: 16px">T2VZero (<a href="#ref-txt2vid">[3]</a>)</th>
+    </tr>
+      <tr>
+        <th><a href="qual_videos/wolf/shiny_robot/controlvideo.mp4"> <a href="qual_videos/wolf/shiny_robot/controlvideo.mp4"> <video  width="350" src="qual_videos/wolf/shiny_robot/controlvideo.mp4" autoplay loop controls muted/> </a> </a></th>
+        <th><a href="qual_videos/wolf/shiny_robot/sdedit.mp4"> <a href="qual_videos/wolf/shiny_robot/sdedit.mp4"> <video  width="350" src="qual_videos/wolf/shiny_robot/sdedit.mp4" autoplay loop controls muted/> </a> </a></th>
+        <th><a href="qual_videos/wolf/shiny_robot/t2v.mp4"> <a href="qual_videos/wolf/shiny_robot/t2v.mp4"> <video  width="350" src="qual_videos/wolf/shiny_robot/t2v.mp4" autoplay loop controls muted/> </a> </a></th>
+      </tr>
+      <tr>
+        <th style="font-size: 16px">StreamV2V (<a href="#ref-stream">[5]</a>)</th>
+        <th style="font-size: 16px">MotionTransfer (<a href="#ref-motion">[6]</a>)</th>
+    </tr>
+    <tr>
+      <th><a href="qual_videos/wolf/shiny_robot/stream.mp4"> <a href="qual_videos/wolf/shiny_robot/stream.mp4"> <video  width="350" src="qual_videos/wolf/shiny_robot/stream.mp4" autoplay loop controls muted/> </a> </a></th>
+      <th><a href="qual_videos/wolf/shiny_robot/motion.mp4"> <a href="qual_videos/wolf/shiny_robot/motion.mp4"> <video  width="350" src="qual_videos/wolf/shiny_robot/motion.mp4" autoplay loop controls muted/> </a> </a></th>
+    </tr>
+  </table>
+
+<!-- this sample ends -->
+
+<hr>
+<br>
+<br>
+
+<table  width="800" align="center">
+      <!-- <th>A</th>
+      <th>B</th>
+      <th>C</th> -->
+      <!-- <br/> -->
+      <!-- <tr> <td colspan="8"><br />
+        <p align="left"> Wild TI2I (Generated images) </p>
+        <hr>
+    </td> 
+        </tr> -->
+  <tr>
+    <tr>
+        <th style="font-family: Chalkduster">"Cutting Bricks"</th>
+        <th style="font-size: 16px">Ours</th>
+        <th style="font-size: 16px">TokenFlow (<a href="#ref-tf">[2]</a>)</th>
+    </tr>
+
+
+    <tr>
+        <th><a href="qual_videos/breadcutting/cutting_bricks/input.mp4"> <a href="qual_videos/breadcutting/cutting_bricks/input.mp4"> <video  width="350" src="qual_videos/breadcutting/cutting_bricks/input.mp4" autoplay loop controls muted/> </a> </a></th>
+        <th><a href="qual_videos/breadcutting/cutting_bricks/adave.mp4"> <a href="qual_videos/breadcutting/cutting_bricks/adave.mp4"> <video  width="350" src="qual_videos/breadcutting/cutting_bricks/adave.mp4" autoplay loop controls muted/> </a> </a></th>
+        <th><a href="qual_videos/breadcutting/cutting_bricks/tokenflow.mp4"> <a href="qual_videos/breadcutting/cutting_bricks/tokenflow.mp4"> <video  width="350" src="qual_videos/breadcutting/cutting_bricks/tokenflow.mp4" autoplay loop controls muted/> </a> </a></th>
+      </tr>
+      <tr>
+        <th style="font-size: 16px">ControlVideo (<a href="#ref-CV">[1]</a>)</th>
+        <th style="font-size: 16px">SDEdit (<a href="#ref-SDE">[4]</a>)</th>
+        <th style="font-size: 16px">T2VZero (<a href="#ref-txt2vid">[3]</a>)</th>
+    </tr>
+      <tr>
+        <th><a href="qual_videos/breadcutting/cutting_bricks/controlvideo.mp4"> <a href="qual_videos/breadcutting/cutting_bricks/controlvideo.mp4"> <video  width="350" src="qual_videos/breadcutting/cutting_bricks/controlvideo.mp4" autoplay loop controls muted/> </a> </a></th>
+        <th><a href="qual_videos/breadcutting/cutting_bricks/sdedit.mp4"> <a href="qual_videos/breadcutting/cutting_bricks/sdedit.mp4"> <video  width="350" src="qual_videos/breadcutting/cutting_bricks/sdedit.mp4" autoplay loop controls muted/> </a> </a></th>
+        <th><a href="qual_videos/breadcutting/cutting_bricks/t2v.mp4"> <a href="qual_videos/breadcutting/cutting_bricks/t2v.mp4"> <video  width="350" src="qual_videos/breadcutting/cutting_bricks/t2v.mp4" autoplay loop controls muted/> </a> </a></th>
+      </tr>
+      <tr>
+        <th style="font-size: 16px">StreamV2V (<a href="#ref-stream">[5]</a>)</th>
+        <th style="font-size: 16px">MotionTransfer (<a href="#ref-motion">[6]</a>)</th>
+    </tr>
+    <tr>
+      <th><a href="qual_videos/breadcutting/cutting_bricks/stream.mp4"> <a href="qual_videos/breadcutting/cutting_bricks/stream.mp4"> <video  width="350" src="qual_videos/breadcutting/cutting_bricks/stream.mp4" autoplay loop controls muted/> </a> </a></th>
+      <th><a href="qual_videos/breadcutting/cutting_bricks/motion.mp4"> <a href="qual_videos/breadcutting/cutting_bricks/motion.mp4"> <video  width="350" src="qual_videos/breadcutting/cutting_bricks/motion.mp4" autoplay loop controls muted/> </a> </a></th>
+    </tr>
+  </table>
+
+<hr>
+<br>
+<br>
+
+<table  width="800" align="center">
+      <!-- <th>A</th>
+      <th>B</th>
+      <th>C</th> -->
+      <!-- <br/> -->
+      <!-- <tr> <td colspan="8"><br />
+        <p align="left"> Wild TI2I (Generated images) </p>
+        <hr>
+    </td> 
+        </tr> -->
+  <tr>
+    <tr>
+        <th style="font-family: Chalkduster">"Cutting bread, Van Gogh style"</th>
+        <th style="font-size: 16px">Ours</th>
+        <th style="font-size: 16px">TokenFlow (<a href="#ref-tf">[2]</a>)</th>
+    </tr>
+
+
+    <tr>
+        <th><a href="qual_videos/breadcutting/van_gogh_style/input.mp4"> <a href="qual_videos/breadcutting/van_gogh_style/input.mp4"> <video  width="350" src="qual_videos/breadcutting/van_gogh_style/input.mp4" autoplay loop controls muted/> </a> </a></th>
+        <th><a href="qual_videos/breadcutting/van_gogh_style/adave.mp4"> <a href="qual_videos/breadcutting/van_gogh_style/adave.mp4"> <video  width="350" src="qual_videos/breadcutting/van_gogh_style/adave.mp4" autoplay loop controls muted/> </a> </a></th>
+        <th><a href="qual_videos/breadcutting/van_gogh_style/tokenflow.mp4"> <a href="qual_videos/breadcutting/van_gogh_style/tokenflow.mp4"> <video  width="350" src="qual_videos/breadcutting/van_gogh_style/tokenflow.mp4" autoplay loop controls muted/> </a> </a></th>
+      </tr>
+      <tr>
+        <th style="font-size: 16px">ControlVideo (<a href="#ref-CV">[1]</a>)</th>
+        <th style="font-size: 16px">SDEdit (<a href="#ref-SDE">[4]</a>)</th>
+        <th style="font-size: 16px">T2VZero (<a href="#ref-txt2vid">[3]</a>)</th>
+    </tr>
+      <tr>
+        <th><a href="qual_videos/breadcutting/van_gogh_style/controlvideo.mp4"> <a href="qual_videos/breadcutting/van_gogh_style/controlvideo.mp4"> <video  width="350" src="qual_videos/breadcutting/van_gogh_style/controlvideo.mp4" autoplay loop controls muted/> </a> </a></th>
+        <th><a href="qual_videos/breadcutting/van_gogh_style/sdedit.mp4"> <a href="qual_videos/breadcutting/van_gogh_style/sdedit.mp4"> <video  width="350" src="qual_videos/breadcutting/van_gogh_style/sdedit.mp4" autoplay loop controls muted/> </a> </a></th>
+        <th><a href="qual_videos/breadcutting/van_gogh_style/t2v.mp4"> <a href="qual_videos/breadcutting/van_gogh_style/t2v.mp4"> <video  width="350" src="qual_videos/breadcutting/van_gogh_style/t2v.mp4" autoplay loop controls muted/> </a> </a></th>
+      </tr>
+      <tr>
+        <th style="font-size: 16px">StreamV2V (<a href="#ref-stream">[5]</a>)</th>
+        <th style="font-size: 16px">MotionTransfer (<a href="#ref-motion">[6]</a>)</th>
+    </tr>
+    <tr>
+      <th><a href="qual_videos/breadcutting/van_gogh_style/stream.mp4"> <a href="qual_videos/breadcutting/van_gogh_style/stream.mp4"> <video  width="350" src="qual_videos/breadcutting/van_gogh_style/stream.mp4" autoplay loop controls muted/> </a> </a></th>
+      <th><a href="qual_videos/breadcutting/van_gogh_style/motion.mp4"> <a href="qual_videos/breadcutting/van_gogh_style/motion.mp4"> <video  width="350" src="qual_videos/breadcutting/van_gogh_style/motion.mp4" autoplay loop controls muted/> </a> </a></th>
+     </tr>
+  </table>
+<!-- this sample ends -->
+
+<!------------------ END SECTION ------------------>
+
+<p><br>
+</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+
+<hr>
+  
+<p><br>
+</p>
+<p>&nbsp;</p>
+
+
+<hr>
+
+
+<h2 id="ablation_container" align="left"><a name="image-results" id="image-results"></a>Ablations on Various Self-Attention Extensions</h2>
+<p align="left"> We conduct ablation study on various extensions of self-attention mechanisms for consistent video editing. We use 40 frames from each video for joint editing in the same framework.
+  <ul>
+    <li>First Frame: Only KVs from first frame is used in all frames.</li> 
+    <li>First Frame+Prev Frame: KVs from first frame and immediate previous frame are used.</li> 
+    <li>First Frame+Two Prev Frames: KVs from first frame and two immediate previous frames are used.</li> 
+    <li>Sampled at 3: Reference frames are sampled at an interval 3 from 40 frames, and used in all frames.</li> 
+    <li>Sampled at 3 + Ada-VE(ours): Reference frames are sampled at an interval 3 from 40 frames, and used in all frames. Our adaptive attention extension is integrated.</li> 
+    <li>Sampled at 1: This represents full extension of KVs in self-attention with sampling interval 1.</li> 
+    <li>Sampled at 1 + Ada-VE(ours): This represents full extension of KVs in self-attention with sampling interval 1. Our adaptive attention extension is integrated.</li> 
+
+      <!-- <li>Tune-a-video (<a href="#ref-TAV">[2]</a>).</li> 
+      <li>Gen1 (<a href="#ref-gen1">[3]</a>).</li> 
+      <li>Plug-and-Play per frame (<a href="#ref-pnp">[4]</a>).</li> 
+      <li>Fate-Zero (<a href="#ref-fatezero">[8]</a>)</li>
+      <li>Rerender-a-Video (<a href="#ref-rerender">[10]</a>)</li> -->
+</ul>
+<p align="left"> We observe significant quality and consistency improvements by using denser sampling for extensions. 
+  Notably, our adaptive method can preserve the baseline extension performance, while achieving significant speed-up. 
+
+
+  <table  width="800" align="center">
+    <!-- <th>A</th>
+    <th>B</th>
+    <th>C</th> -->
+    <!-- <br/> -->
+    <!-- <tr> <td colspan="8"><br />
+      <p align="left"> Wild TI2I (Generated images) </p>
+      <hr>
+  </td> 
+      </tr> -->
+<tr>
+  <tr>
+      <th style="font-size: 16px">Input Video</th>
+      <th style="font-size: 16px">First Frame</th>
+      <th style="font-size: 16px">First Frame + Prev Frame</th>
+      <th style="font-size: 16px">First Frame + Two Prev Frames</th>
+    </tr>
+
+  <tr>
+      <th><a href="ablation_videos/input.mp4"> <a href="ablation_videos/input.mp4"> <video  width="270" src="ablation_videos/input.mp4" autoplay loop controls muted/> </a> </a></th>
+      <th><a href="ablation_videos/first_frame.mp4"> <a href="ablation_videos/first_frame.mp4"> <video  width="270" src="ablation_videos/first_frame.mp4" autoplay loop controls muted/> </a> </a></th>
+      <th><a href="ablation_videos/two_frames.mp4"> <a href="ablation_videos/two_frames.mp4"> <video  width="270" src="ablation_videos/two_frames.mp4" autoplay loop controls muted/> </a> </a></th>
+      <th><a href="ablation_videos/three_frames.mp4"> <a href="ablation_videos/three_frames.mp4"> <video  width="270" src="ablation_videos/three_frames.mp4" autoplay loop controls muted/> </a> </a></th>
+    </tr>
+    <tr>
+      <th style="font-size: 16px">Sampled at 3</th>
+      <th style="font-size: 16px">Sampled at 3 + Ada-VE(ours)</th>
+      <th style="font-size: 16px">Sampled at 1</th>
+      <th style="font-size: 16px">Sampled at 1 + Ada-VE(ours)</th>
+  </tr>
+    <tr>
+      <th><a href="ablation_videos/s3.mp4"> <a href="ablation_videos/s3.mp4"> <video  width="270" src="ablation_videos/s3.mp4" autoplay loop controls muted/> </a> </a></th>
+      <th><a href="ablation_videos/s3_ours.mp4"> <a href="ablation_videos/s3_ours.mp4"> <video  width="270" src="ablation_videos/s3_ours.mp4" autoplay loop controls muted/> </a> </a></th>
+      <th><a href="ablation_videos/s1.mp4"> <a href="ablation_videos/s1.mp4"> <video  width="270" src="ablation_videos/s1.mp4" autoplay loop controls muted/> </a> </a></th>
+      <th><a href="ablation_videos/s1_ours.mp4"> <a href="ablation_videos/s1_ours.mp4"> <video  width="270" src="ablation_videos/s1_ours.mp4" autoplay loop controls muted/> </a> </a></th>
+    </tr>
+</table>
+
+  <hr>
+	
+  <p><br>
+  </p>
+  <p>&nbsp;</p>
+  <p>&nbsp;</p>
+  <p>&nbsp;</p>
+
+
+  <p>
+    <p>
+      <a name="ref-cv" id="ref-cv"></a>
+      [1] Zhang, Yabo, Yuxiang Wei, Dongsheng Jiang, XIAOPENG ZHANG, Wangmeng Zuo, and 
+      Qi Tian. "ControlVideo: Training-free Controllable Text-to-video Generation." In The Twelfth International Conference on Learning Representations. 2024.  </p>
+    <p>  
+    <a name="ref-tf" id="ref-tf"></a>
+    [2] Geyer, Michal, Omer Bar-Tal, Shai Bagon, and 
+    Tali Dekel. "TokenFlow: Consistent Diffusion Features for Consistent Video Editing." In The Twelfth International Conference on Learning Representations. 2024.
+
+    <p>
+      <a name="ref-txt2vid" id="ref-txt2vid"></a>
+      [3] Khachatryan, Levon, Andranik Movsisyan, Vahram Tadevosyan, Roberto Henschel, Zhangyang Wang, Shant Navasardyan, and Humphrey Shi. "Text2video-zero: Text-to-image diffusion models are zero-shot video generators." In Proceedings of the IEEE/CVF International Conference on Computer Vision, pp. 15954-15964. 2023.
+    </p>
+  
+  </p>
+    <a name="ref-sde" id="ref-sde"></a>
+    [4] henlin Meng, Yutong He, Yang Song, Jiaming Song, Jia-
+    jun Wu, Jun-Yan Zhu, and Stefano Ermon. SDEdit: Guided
+    image synthesis and editing with stochastic differential equa-
+    tions. In International Conference on Learning Representations, 2022.
+  </p>
+
+  <p>
+    <a name="ref-stream" id="ref-stream"></a>
+    [5] Liang, Feng, et al. "Looking Backward: Streaming Video-to-Video Translation with Feature Banks." arXiv preprint arXiv:2405.15757 (2024).
+  </p>
+
+  <p>
+    <a name="ref-motion" id="ref-motion"></a>
+    [6] Yatim, Danah, et al. "Space-time diffusion features for zero-shot text-driven motion transfer." CVPR. 2024.
+  </p>
+
+</div>
+
+</body></html>
